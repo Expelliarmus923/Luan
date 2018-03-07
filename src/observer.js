@@ -1,52 +1,47 @@
+const _objectproto = Object.prototype;
+
+export class Dep {
+    constructor() {
+        this.deps = [];
+    }
+    addDep(watch) {
+        this.deps.push(watch);
+    }
+    notify() {
+        this.deps.forEach(watch => {
+            watch.update();
+        });
+    }
+}
 export default class Observer {
     constructor(data) {
         this.dep = new Dep();
-        this.initObserver(data);
+        this.init(data);
     }
-    initObserver(data) {
-        if (!data || Object.prototype.toString.call(data) !== '[object Object]')
+    init(data) {
+        if (!data || _objectproto.toString.call(data) !== '[object Object]')
             return;
-        Object.keys(data).forEach(subObjKey => {
-            this.defineReactive(subObjKey, data[subObjKey], data);
+        Object.keys(data).forEach(key => {            
+            this.defineReact(key, data[key], data);
         });
     }
-    defineReactive(key, value, data) {
-        //继续监听自属性。
-        let childObj = this.initObserver(value),dep = this.dep,_this = this;
-        Object.defineProperty(data, key, {
+    defineReact(key, val, obj) {
+        let dep = this.dep;
+        this.init(val);
+        Object.defineProperty(obj, key, {
             configurable: true,
             enumerable: true,
             set(newVal) {
-                if (newVal === value) {
-                    return;
-                }
-                //赋值操作
-                value = newVal;
-                //新值是object继续监听
-                childObj = _this.initObserver(value);
+                if (newVal === val) return;
+                val = newVal;
+                //通知watch
                 dep.notify();
             },
             get() {
-                if (Dep.target) {
-                    dep.addSub(Dep.target);
-                }
-                return value;
+                Dep.target && dep.addDep(Dep.target);
+                return val;
             }
         });
     }
 }
 
-export class Dep {
-    constructor() {
-        this.subs = [];
-    }
-    //发起通知
-    notify() {
-        this.subs.forEach(watcher => {
-            watcher.update();
-        });
-    }
-    addSub(watcher) {
-        this.subs.push(watcher);
-    }
-}

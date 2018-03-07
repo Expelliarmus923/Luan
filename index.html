@@ -7,6 +7,14 @@
     <title>Document</title>
 </head>
 <body>
-    <script src="./demo-reactive-data.js" type="text/javascript"></script>
+    <div id="app">
+        <h2>{{title}}</h2>
+        <input v-model="name">
+        <h1>{{name}}</h1>
+        <!-- test -->
+        <!-- <h1>我的名字是{{name}}我的标题是{{title}}</h1> -->
+        <button v-on:click="clickMe">click me!</button>
+    </div>
+    <script src="./test/index.js" type="text/javascript"></script>
 </body>
 </html>

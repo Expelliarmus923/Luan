@@ -1,11 +1,22 @@
 import Vue from '../src/index.js';
 
-var vue = new Vue({
-    data:{
-        name: 'lulizhou'
+window.vue = new Vue({
+    el: '#app',
+    data: {
+        title: 'hello world',
+        name: 'canfoo',
+        flag: true
     },
-    exp:'name'
+    methods: {
+        clickMe: function () {
+            if(this.flag){
+                this.title = '你好！世界';
+            }else{
+                this.title = '滚蛋！世界';
+            }
+            this.flag = !this.flag;
+        }
+    },
+    mounted: function () {
+    }
 });
-vue.data.name = {firstName: 'lu', lastName: 'lizhou'};
-
-vue.data.name.firstName = 'chen';
